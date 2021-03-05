@@ -96,14 +96,18 @@ public class ScreenShotListenManager {
         // 记录开始监听的时间戳
         mStartListenTime = System.currentTimeMillis();
 
-        // 创建内容观察者
-        mExternalObserver = new MediaContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mUiHandler);
+        if (mExternalObserver == null) {
+            Log.i(TAG, "启动监听startListen");
+            // 创建内容观察者
+            mExternalObserver = new MediaContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mUiHandler);
 
-        mContext.getContentResolver().registerContentObserver(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                true,
-                mExternalObserver
-        );
+            mContext.getContentResolver().registerContentObserver(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    true,
+                    mExternalObserver
+            );
+        }
+
     }
 
     /**
