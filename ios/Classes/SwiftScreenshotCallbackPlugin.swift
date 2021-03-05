@@ -4,6 +4,12 @@ import UIKit
 public class SwiftScreenshotCallbackPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "screenshot_callback", binaryMessenger: registrar.messenger())
+    NotificationCenter.default.addObserver(forName: UIApplication.userDidTakeScreenshotNotification, object: nil, queue: OperationQueue.main) { (noti: Notification) in
+        let path = screenshot();
+        print(path);
+        channel.invokeMethod("screenshotCallback", arguments: path);
+    }
+    
     let instance = SwiftScreenshotCallbackPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
@@ -11,4 +17,24 @@ public class SwiftScreenshotCallbackPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     result("iOS " + UIDevice.current.systemVersion)
   }
+    static func screenshot() -> String{
+        let screenRect = UIScreen.main.bounds
+        UIGraphicsBeginImageContext(screenRect.size)
+        let ctx:CGContext = UIGraphicsGetCurrentContext()!
+        UIApplication.shared.keyWindow?.layer.render(in: ctx)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext();
+        guard let imageData = image?.pngData() as NSData? else { return"" }
+        let documentPath = NSTemporaryDirectory();
+        let path = documentPath + "screen_shot.png";
+        if imageData.write(toFile: path, atomically: true) {
+            print("保存成功")
+            return path;
+        } else {
+            print("保存失败")
+            return "";
+        }
+    
+    }
 }
+
