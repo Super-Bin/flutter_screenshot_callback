@@ -72,7 +72,7 @@ public class ScreenShotListenManager {
             throw new IllegalArgumentException("The context must not be null.");
         }
         mContext = context;
-        Log.d("zzb", "ScreenShotListenManager 初始化");
+        Log.d(TAG, "ScreenShotListenManager 初始化");
 
         // 获取屏幕真实的分辨率
         if (sScreenRealSize == null) {
@@ -125,14 +125,14 @@ public class ScreenShotListenManager {
 //        sHasCallbackPaths.clear();
 
         //切记！！！:必须设置为空 可能mListener 会隐式持有Activity导致释放不掉
-        mListener = null;
+//        mListener = null;
     }
 
     /**
      * 处理媒体数据库的内容改变
      */
     private void handleMediaContentChange(Uri contentUri) {
-        Log.i("zzb", "contentUri = " + contentUri);
+        Log.i(TAG, "contentUri = " + contentUri);
         Cursor cursor = null;
         try {
             // 数据改变时查询数据库中最后加入的一条数据
@@ -160,7 +160,6 @@ public class ScreenShotListenManager {
             if (isReadExternalStoragePermissionGranted()) {
                 // 处理获取到的第一行数据
                 if (checkScreenShot(path, dateTaken) && !checkCallback(path)) {
-                    Log.i("zzb", "这是截图");
                     mListener.onShot(path);
                 }
             } else {
@@ -170,7 +169,7 @@ public class ScreenShotListenManager {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG, "出错了 " + e);
+            Log.e(TAG, "出错了 " + e);
 
         } finally {
             if (cursor != null && !cursor.isClosed()) {
@@ -179,22 +178,6 @@ public class ScreenShotListenManager {
         }
     }
 
-    /**
-     * 处理获取到的一行数据
-     */
-    private void handleMediaRowData(String data, long dateTaken, int width, int height) {
-        if (checkScreenShot(data, dateTaken, width, height)) {
-            Log.d(TAG, "ScreenShot: path = " + data + "; size = " + width + " * " + height
-                    + "; date = " + dateTaken);
-            if (mListener != null && !checkCallback(data)) {
-                mListener.onShot(data);
-            }
-        } else {
-            // 如果在观察区间媒体数据库有数据改变，又不符合截屏规则，则输出到 log 待分析
-            Log.w(TAG, "Media content changed, but not screenshot: path = " + data
-                    + "; size = " + width + " * " + height + "; date = " + dateTaken);
-        }
-    }
 
     private boolean checkScreenShot(String path, long dateTaken) {
 
@@ -216,46 +199,6 @@ public class ScreenShotListenManager {
         // 判断图片路径是否含有指定的关键字之一, 如果有, 则认为当前截屏了
         for (String keyWork : KEYWORDS) {
             if (path.contains(keyWork)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断指定的数据行是否符合截屏条件
-     */
-    private boolean checkScreenShot(String data, long dateTaken, int width, int height) {
-        /*
-         * 判断依据一: 时间判断
-         */
-        // 如果加入数据库的时间在开始监听之前, 或者与当前时间相差大于10秒, 则认为当前没有截屏
-//        if (dateTaken < mStartListenTime || (System.currentTimeMillis() - dateTaken) > 10 * 1000) {
-//            return false;
-//        }
-
-        /*
-         * 判断依据二: 尺寸判断
-         */
-        if (sScreenRealSize != null) {
-            // 如果图片尺寸超出屏幕, 则认为当前没有截屏
-            if (!((width <= sScreenRealSize.x && height <= sScreenRealSize.y)
-                    || (height <= sScreenRealSize.x && width <= sScreenRealSize.y))) {
-                return false;
-            }
-        }
-
-        /*
-         * 判断依据三: 路径判断
-         */
-        if (TextUtils.isEmpty(data)) {
-            return false;
-        }
-        data = data.toLowerCase();
-        // 判断图片路径是否含有指定的关键字之一, 如果有, 则认为当前截屏了
-        for (String keyWork : KEYWORDS) {
-            if (data.contains(keyWork)) {
                 return true;
             }
         }
@@ -366,7 +309,6 @@ public class ScreenShotListenManager {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            Log.i("zzb", "我进来第一个");
             handleMediaContentChange(mContentUri);
 
         }

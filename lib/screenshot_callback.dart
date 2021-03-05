@@ -22,6 +22,8 @@ class ScreenshotCallback {
 
   IScreenshotCallback _iScreenshotCallback;
 
+  List<IScreenshotCallback> onCallbacks = <IScreenshotCallback>[];
+
   ScreenshotCallback() {
     _channel.setMethodCallHandler(methodCallHandler);
   }
@@ -55,6 +57,8 @@ class ScreenshotCallback {
 
   void stopScreenshot() async =>
       await _channel.invokeMethod(FLUTTER_STOP_SCREENSHOT);
+
+
 }
 
 abstract class IScreenshotCallback {
