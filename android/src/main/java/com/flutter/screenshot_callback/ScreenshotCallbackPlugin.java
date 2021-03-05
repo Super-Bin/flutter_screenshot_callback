@@ -27,8 +27,8 @@ public class ScreenshotCallbackPlugin implements FlutterPlugin, MethodCallHandle
   private Activity mActivity;
 
   // Flutter调用方法
-  private static final String NATIVE_START_SCREENSHOT = "startScreenshot";
-  private static final String NATIVE_STOP_SCREENSHOT = "stopScreenshot";
+  private static final String NATIVE_START_SCREENSHOT = "startListenScreenshot";
+  private static final String NATIVE_STOP_SCREENSHOT = "stopListenScreenshot";
 
   // native调用flutter方法
   private static final String NATIVE_SCREENSHOT_CALLBACK = "screenshotCallback";

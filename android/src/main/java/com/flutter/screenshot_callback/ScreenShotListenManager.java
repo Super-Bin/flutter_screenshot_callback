@@ -72,6 +72,7 @@ public class ScreenShotListenManager {
             throw new IllegalArgumentException("The context must not be null.");
         }
         mContext = context;
+        Log.d("zzb", "ScreenShotListenManager 初始化");
 
         // 获取屏幕真实的分辨率
         if (sScreenRealSize == null) {
@@ -149,6 +150,7 @@ public class ScreenShotListenManager {
             }
             if (!cursor.moveToFirst()) {
                 Log.d(TAG, "Cursor no data.");
+                mListener.onScreenCapturedWithDeniedPermission();
                 return;
             }
             String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));

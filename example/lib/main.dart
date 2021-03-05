@@ -14,7 +14,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  String _imagePath = 'Unknown';
+  ScreenshotCallback _screenshotCallback;
 
   @override
   void initState() {
@@ -23,7 +24,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initCallback(){
-    ScreenshotCallback().startScreenshot();
+    _screenshotCallback = ScreenshotCallback();
+    _screenshotCallback.startScreenshot();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _screenshotCallback.stopScreenshot();
   }
 
 
@@ -35,7 +44,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Text('Image path: $_imagePath\n'),
         ),
       ),
     );
