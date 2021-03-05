@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> implements IScreenshotCallback {
   String _imagePath = 'Unknown';
   ScreenshotCallback _screenshotCallback;
 
@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
   void initCallback(){
     _screenshotCallback = ScreenshotCallback();
     _screenshotCallback.startScreenshot();
+    _screenshotCallback.setInterfaceScreenshotCallback(this);
   }
 
   @override
@@ -48,5 +49,17 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  @override
+  deniedPermission() {
+    print("没有权限");
+  }
+
+  @override
+  screenshotCallback(String data) {
+    setState(() {
+      _imagePath = data;
+    });
   }
 }

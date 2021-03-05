@@ -20,6 +20,8 @@ class ScreenshotCallback {
   static const String NATIVE_SCREENSHOT_CALLBACK = "screenshotCallback";
   static const String NATIVE_DENIED_PERMISSION = "deniedPermission";
 
+  IScreenshotCallback _iScreenshotCallback;
+
   ScreenshotCallback() {
     _channel.setMethodCallHandler(methodCallHandler);
   }
@@ -31,22 +33,31 @@ class ScreenshotCallback {
         {
           String path = call.arguments;
           print("截图回调，path是：$path");
+          _iScreenshotCallback?.screenshotCallback(path);
         }
         break;
       case NATIVE_DENIED_PERMISSION:
         {
           print("截图回调，没有获取权限");
+          _iScreenshotCallback?.deniedPermission();
         }
         break;
     }
     // return returnResult();
   }
 
-  void startScreenshot() async {
-    print("startScreenshot 寄哪里了");
-    await _channel.invokeMethod(FLUTTER_START_SCREENSHOT);
+  void setInterfaceScreenshotCallback(IScreenshotCallback iScreenshotCallback){
+    _iScreenshotCallback = iScreenshotCallback;
   }
+
+  void startScreenshot() async =>
+    await _channel.invokeMethod(FLUTTER_START_SCREENSHOT);
 
   void stopScreenshot() async =>
       await _channel.invokeMethod(FLUTTER_STOP_SCREENSHOT);
+}
+
+abstract class IScreenshotCallback {
+  screenshotCallback(String data);
+  deniedPermission();
 }

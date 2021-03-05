@@ -94,7 +94,7 @@ public class ScreenShotListenManager {
 //        sHasCallbackPaths.clear();
 
         // 记录开始监听的时间戳
-//        mStartListenTime = System.currentTimeMillis();
+        mStartListenTime = System.currentTimeMillis();
 
         // 创建内容观察者
         mExternalObserver = new MediaContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mUiHandler);
@@ -154,10 +154,12 @@ public class ScreenShotListenManager {
                 return;
             }
             String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            int dateTakenIndex = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATE_TAKEN);
+            long dateTaken = cursor.getLong(dateTakenIndex);
 
             if (isReadExternalStoragePermissionGranted()) {
                 // 处理获取到的第一行数据
-                if (isScreenshotPath(path) && !checkCallback(path)) {
+                if (checkScreenShot(path, dateTaken) && !checkCallback(path)) {
                     Log.i("zzb", "这是截图");
                     mListener.onShot(path);
                 }
@@ -194,7 +196,19 @@ public class ScreenShotListenManager {
         }
     }
 
-    private boolean isScreenshotPath(String path) {
+    private boolean checkScreenShot(String path, long dateTaken) {
+
+        /*
+         * 判断依据一: 时间判断
+         */
+        // 如果加入数据库的时间在开始监听之前, 或者与当前时间相差大于10秒, 则认为当前没有截屏
+        if (dateTaken < mStartListenTime || (System.currentTimeMillis() - dateTaken) > 10 * 1000) {
+            return false;
+        }
+
+        /*
+         * 判断依据二: 路径判断
+         */
         if (TextUtils.isEmpty(path)) {
             return false;
         }
