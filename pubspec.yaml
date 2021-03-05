@@ -1,8 +1,8 @@
 name: screenshot_callback
 description: screenshot callback
-version: 0.0.1
+version: 0.0.2
 author:
-homepage:https://github.com/Super-Bin/flutter_screenshot_callback.git
+homepage: https://github.com/Super-Bin/flutter_screenshot_callback.git
 repository: https://github.com/Super-Bin/flutter_screenshot_callback.git
 
 environment:
