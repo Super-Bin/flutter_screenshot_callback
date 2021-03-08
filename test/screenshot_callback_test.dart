@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_screenshot_callback/flutter_screenshot_callback.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:screenshot_callback/screenshot_callback.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('screenshot_callback');
@@ -18,6 +18,5 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await ScreenshotCallback.platformVersion, '42');
   });
 }

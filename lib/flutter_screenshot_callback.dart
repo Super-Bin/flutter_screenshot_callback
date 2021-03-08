@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-/// @FileName: screenshot_callback.dart
+/// @FileName: flutter_screenshot_callback.dart
 /// @Author: zhaozhebin
 /// @Date: 2021/3/5
 /// @Description:
