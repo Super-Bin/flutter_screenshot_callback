@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:screenshot_callback/screenshot_callback.dart';
+import 'package:flutter_screenshot_callback/screenshot_callback.dart';
 
 void main() {
   runApp(MyApp());
