@@ -14,3 +14,8 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 ## Android需要获取存储权限才能正常使用
+
+## 需要真机才能验证截图
+
+# 上传命令
+flutter packages pub publish --dry-run --server=https://pub.dartlang.org -v
