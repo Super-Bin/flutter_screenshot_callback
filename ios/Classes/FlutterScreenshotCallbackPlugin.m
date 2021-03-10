@@ -10,6 +10,6 @@
 
 @implementation FlutterScreenshotCallbackPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-    [FlutterScreenshotCallbackPlugin registerWithRegistrar:registrar];
+    [SwiftFlutterScreenshotCallbackPlugin registerWithRegistrar:registrar];
 }
 @end

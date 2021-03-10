@@ -31,7 +31,7 @@ flutter:
         package: com.flutter.screenshot_callback
         pluginClass: ScreenshotCallbackPlugin
       ios:
-        pluginClass: ScreenshotCallbackPlugin
+        pluginClass: FlutterScreenshotCallbackPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
