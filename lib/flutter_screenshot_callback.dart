@@ -20,7 +20,7 @@ class ScreenshotCallback {
   static const String NATIVE_SCREENSHOT_CALLBACK = "screenshotCallback";
   static const String NATIVE_DENIED_PERMISSION = "deniedPermission";
 
-  IScreenshotCallback _iScreenshotCallback;
+  IScreenshotCallback? _iScreenshotCallback;
 
   List<IScreenshotCallback> onCallbacks = <IScreenshotCallback>[];
 

@@ -17,5 +17,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ## 需要真机才能验证截图
 
+## 更新flutter2，支持Null safety
+
 # 上传命令
 flutter packages pub publish --dry-run --server=https://pub.dartlang.org -v
