@@ -1,6 +1,7 @@
 package com.flutter.screenshot_callback;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -23,7 +25,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 媒体查询语句有问题：
+ * 出错了 java.lang.IllegalArgumentException: Invalid token limit
+ *
+ * 在android 11中，添加了一个约束以不允许在排序值中使用LIMIT。
+ * 您需要将查询与包参数一起使用。例如
+ * https://stackoverflow.com/questions/10390577/limiting-number-of-rows-in-a-contentresolver-query-function/62891878#62891878
+ *
+ */
 public class ScreenShotListenManager {
     private static final String TAG = "ScreenShotListenManager";
 
@@ -139,14 +149,45 @@ public class ScreenShotListenManager {
         Log.i(TAG, "contentUri = " + contentUri);
         Cursor cursor = null;
         try {
+
             // 数据改变时查询数据库中最后加入的一条数据
             cursor = mContext.getContentResolver().query(
                     contentUri,
                     MEDIA_PROJECTIONS,
                     null,
                     null,
-                    MediaStore.Images.ImageColumns.DATE_MODIFIED + " desc limit 1"
+//                    MediaStore.Images.ImageColumns.DATE_MODIFIED + " desc limit 1"
+                        MediaStore.Images.ImageColumns.DATE_MODIFIED + " desc"
             );
+
+//            还要适配一下，大于api26的方案
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                Bundle bundle = new Bundle();
+//                bundle.putInt(ContentResolver.QUERY_ARG_LIMIT, 1);
+//                // 排序列
+//                ArrayList<String> list = new ArrayList<String>();
+////                list.add(MediaStore.Files.FileColumns.DATE_MODIFIED);
+//                list.add(MediaStore.Files.FileColumns.DATE_TAKEN);
+//                bundle.putStringArrayList(ContentResolver.QUERY_ARG_SORT_COLUMNS, list);
+//                // 排序方向，降序
+//                bundle.putInt(ContentResolver.QUERY_ARG_SORT_DIRECTION, ContentResolver.QUERY_SORT_DIRECTION_DESCENDING);
+//
+//                cursor = mContext.getContentResolver().query(
+//                        contentUri,
+//                        MEDIA_PROJECTIONS,
+//                        bundle,
+//                        null
+//                );
+//            } else {
+//                cursor = mContext.getContentResolver().query(
+//                        contentUri,
+//                        MEDIA_PROJECTIONS,
+//                        null,
+//                        null,
+//                    MediaStore.Images.ImageColumns.DATE_MODIFIED + " desc limit 1"
+////                        MediaStore.Images.ImageColumns.DATE_MODIFIED + " desc"
+//                );
+//            }
 
             if (cursor == null) {
                 Log.e(TAG, "Deviant logic.");
@@ -184,7 +225,7 @@ public class ScreenShotListenManager {
 
 
     private boolean checkScreenShot(String path, long dateTaken) {
-
+        Log.i(TAG, "checkScreenShot path = " + path + " dateTaken " + dateTaken);
         /*
          * 判断依据一: 时间判断
          */
