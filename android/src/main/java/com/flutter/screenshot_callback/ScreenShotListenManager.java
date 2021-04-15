@@ -1,6 +1,7 @@
 package com.flutter.screenshot_callback;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -103,11 +104,10 @@ public class ScreenShotListenManager {
 
 //        sHasCallbackPaths.clear();
 
-        // 记录开始监听的时间戳
-        mStartListenTime = System.currentTimeMillis();
-
         if (mExternalObserver == null) {
             Log.i(TAG, "启动监听startListen");
+            // 记录开始监听的时间戳
+            mStartListenTime = System.currentTimeMillis();
             // 创建内容观察者
             mExternalObserver = new MediaContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mUiHandler);
 
@@ -122,6 +122,8 @@ public class ScreenShotListenManager {
 
     /**
      * 停止监听
+     * 这个应该要放在onStop之后，才停止监听，放在onResume不行
+     * 一些第三方的截图功能，会执行到OnResume方法，
      */
     public void stopListen() {
         assertInMainThread();
@@ -205,6 +207,7 @@ public class ScreenShotListenManager {
             if (isReadExternalStoragePermissionGranted()) {
                 // 处理获取到的第一行数据
                 if (checkScreenShot(path, dateTaken) && !checkCallback(path)) {
+                    Log.i(TAG, "截图回调 path = " + path);
                     mListener.onShot(path);
                 }
             } else {
@@ -225,12 +228,14 @@ public class ScreenShotListenManager {
 
 
     private boolean checkScreenShot(String path, long dateTaken) {
+        long currentTimeMillis = System.currentTimeMillis();
         Log.i(TAG, "checkScreenShot path = " + path + " dateTaken " + dateTaken);
+        Log.i(TAG, "mStartListenTime = " + mStartListenTime + " System.currentTimeMillis() = " + currentTimeMillis);
         /*
          * 判断依据一: 时间判断
          */
         // 如果加入数据库的时间在开始监听之前, 或者与当前时间相差大于10秒, 则认为当前没有截屏
-        if (dateTaken < mStartListenTime || (System.currentTimeMillis() - dateTaken) > 10 * 1000) {
+        if (dateTaken < mStartListenTime || (currentTimeMillis - dateTaken) > 10 * 1000) {
             return false;
         }
 

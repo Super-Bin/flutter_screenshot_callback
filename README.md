@@ -19,5 +19,18 @@ samples, guidance on mobile development, and a full API reference.
 
 ## 更新flutter2，支持Null safety
 
+# Flutter中使用注意
+如果在flutter中重写 didChangeAppLifecycleState，其中在三星手机上，侧面截图功能会执行
+resumed生命周期。
+```
+case AppLifecycleState.resumed: // 应用程序可见，前台
+        _screenshotCallback.startScreenshot();
+        break;
+      case AppLifecycleState.paused: // 应用程序不可见，后台
+        _screenshotCallback.stopScreenshot();
+        break;
+```
+
 # 上传命令
 flutter packages pub publish --dry-run --server=https://pub.dartlang.org -v
+flutter packages pub publish --server=https://pub.dartlang.org
