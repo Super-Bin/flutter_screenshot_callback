@@ -146,11 +146,21 @@ public class ScreenShotListenManager {
 
     /**
      * 处理媒体数据库的内容改变
+     *
+     * video手机没有权限会直接报错，所以要先判断是否有存储权限。
+     * Permission Denial: reading com.android.providers.media.MediaProvider
+     * uri content://media/external/images/media from pid=3202, uid=10326
+     * requires android.permission.READ_EXTERNAL_STORAGE, or grantUriPermission()
      */
     private void handleMediaContentChange(Uri contentUri) {
         Log.i(TAG, "contentUri = " + contentUri);
         Cursor cursor = null;
         try {
+            if (!isReadExternalStoragePermissionGranted()) {
+                Log.i(TAG, "没有权限直接返回");
+                mListener.onScreenCapturedWithDeniedPermission();
+                return;
+            }
 
             // 数据改变时查询数据库中最后加入的一条数据
             cursor = mContext.getContentResolver().query(
@@ -340,6 +350,9 @@ public class ScreenShotListenManager {
      */
     private boolean isReadExternalStoragePermissionGranted() {
 
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+
+        }
         int result = ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE);
         return result == PackageManager.PERMISSION_GRANTED;
     }
