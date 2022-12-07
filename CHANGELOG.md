@@ -1,4 +1,7 @@
-## 0.0.8
+#0.0.9
+1. android配置
+
+# 0.0.8
 1. fix ios bug
 2. dart
 
