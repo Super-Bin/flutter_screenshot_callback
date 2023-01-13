@@ -349,11 +349,12 @@ public class ScreenShotListenManager {
      * 判断权限
      */
     private boolean isReadExternalStoragePermissionGranted() {
-
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-
+        int result;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            result = ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_MEDIA_IMAGES);
+        } else {
+            result = ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE);
         }
-        int result = ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE);
         return result == PackageManager.PERMISSION_GRANTED;
     }
 
