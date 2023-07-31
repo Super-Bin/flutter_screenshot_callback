@@ -32,5 +32,6 @@ case AppLifecycleState.resumed: // 应用程序可见，前台
 ```
 
 # 上传命令
+有一个警告没关系
 flutter packages pub publish --dry-run --server=https://pub.dartlang.org -v
 flutter packages pub publish --server=https://pub.dartlang.org

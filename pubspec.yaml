@@ -3,6 +3,7 @@ description: screenshot callback
 version: 0.0.9
 homepage: https://github.com/Super-Bin/flutter_screenshot_callback.git
 repository: https://github.com/Super-Bin/flutter_screenshot_callback.git
+author: zzb
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
